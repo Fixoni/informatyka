@@ -1,0 +1,121 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+// Funkcja symulująca grę w ruletkę
+void graj_w_ruletke() {
+    double saldo = 1000;  // Początkowa kwota gracza
+    int typ_obstawiania;
+    string kolor_gracza;
+    int liczba_gracza;
+    double kwota_obstawiana;
+    int wynik;
+    string kolor_wyniku;
+    bool kontynuuj = true;
+
+    // Pętla gry
+    while (kontynuuj) {
+        // Wyświetlanie stanu konta
+        cout << "Twoje saldo: " << saldo << " jednostek" << endl;
+        cout << "Wybierz opcję obstawiania:" << endl;
+        cout << "1 - Obstawianie na kolor (Czerwony, Czarny, Zielony)" << endl;
+        cout << "2 - Obstawianie na liczbę (0 - 36)" << endl;
+        cout << "Wybierz numer opcji (1 lub 2): ";
+        cin >> typ_obstawiania;
+
+        // Sprawdzenie, czy kwota gracza jest wystarczająca
+        if (saldo <= 0) {
+            cout << "Nie masz wystarczająco dużo pieniędzy, aby grać!" << endl;
+            return;
+        }
+
+        // Wybór kwoty do obstawienia
+        cout << "Podaj kwotę do obstawienia: ";
+        cin >> kwota_obstawiana;
+
+        // Sprawdzanie, czy gracz ma wystarczającą kwotę na obstawienie
+        if (kwota_obstawiana > saldo) {
+            cout << "Nie masz wystarczającej ilości pieniędzy!" << endl;
+            continue;  // Zaczynamy od nowa, jeśli nie ma wystarczającej ilości pieniędzy
+        }
+
+        saldo -= kwota_obstawiana;  // Zmniejszamy saldo gracza o obstawioną kwotę
+
+        // Wybór typu obstawiania (kolor lub liczba)
+        switch (typ_obstawiania) {
+            case 1:
+                // Obstawianie na kolor
+                cout << "Wybierz kolor (Czerwony, Czarny, Zielony): ";
+                cin >> kolor_gracza;
+
+                // Losowanie wyniku
+                wynik = rand() % 37;  // Losujemy liczbę od 0 do 36
+                if (wynik == 0) {
+                    kolor_wyniku = "Zielony";
+                } else if (wynik % 2 == 0) {
+                    kolor_wyniku = "Czarny";
+                } else {
+                    kolor_wyniku = "Czerwony";
+                }
+
+                cout << "Wynik: " << wynik << " (" << kolor_wyniku << ")" << endl;
+
+                // Sprawdzanie, czy gracz wygrał
+                if (kolor_gracza == kolor_wyniku) {
+                    cout << "Gratulacje! Wygrałeś!" << endl;
+                    if (kolor_gracza == "Zielony") {
+                        saldo += kwota_obstawiana * 14;  // Zielony daje większą wygraną
+                    } else {
+                        saldo += kwota_obstawiana * 2;  // Czarny lub czerwony daje podwójną wygraną
+                    }
+                } else {
+                    cout << "Niestety, przegrałeś!" << endl;
+                }
+                break;
+
+            case 2:
+                // Obstawianie na liczbę
+                cout << "Podaj liczbę do obstawienia (0 - 36): ";
+                cin >> liczba_gracza;
+
+                // Losowanie wyniku
+                wynik = rand() % 37;  // Losujemy liczbę od 0 do 36
+                cout << "Wynik: " << wynik << endl;
+
+                // Sprawdzanie, czy gracz wygrał
+                if (liczba_gracza == wynik) {
+                    cout << "Gratulacje! Wygrałeś!" << endl;
+                    saldo += kwota_obstawiana * 35;  // Liczba daje wygraną 35:1
+                } else {
+                    cout << "Niestety, przegrałeś!" << endl;
+                }
+                break;
+
+            default:
+                cout << "Nieprawidłowa opcja!" << endl;
+                break;
+        }
+
+        // Zapytanie, czy gracz chce kontynuować
+        cout << "Czy chcesz kontynuować grę? (1 - Tak, 0 - Nie): ";
+        int odpowiedz;
+        cin >> odpowiedz;
+
+        if (odpowiedz == 0) {
+            kontynuuj = false;
+            cout << "Dziękujemy za grę! Twoje saldo wynosi: " << saldo << endl;
+        }
+    }
+}
+
+int main() {
+    srand(time(0));  // Inicjalizowanie generatora liczb losowych
+
+    // Uruchomienie gry
+    graj_w_ruletke();
+
+    return 0;
+}
