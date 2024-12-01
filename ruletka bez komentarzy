@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+void graj_w_ruletke() {
+    double saldo = 1000;
+    int typ_obstawiania;
+    string kolor_gracza;
+    int liczba_gracza;
+    double kwota_obstawiana;
+    int wynik;
+    string kolor_wyniku;
+    bool kontynuuj = true;
+
+
+    while (kontynuuj) {
+        cout << "Twoje saldo: " << saldo << " jednostek" << endl;
+        cout << "Wybierz opcje obstawiania:" << endl;
+        cout << "1 - Obstawianie na kolor (Czerwony, Czarny, Zielony)" << endl;
+        cout << "2 - Obstawianie na lieczbe (0 - 36)" << endl;
+        cout << "Wybierz numer opcji (1 lub 2): ";
+        cin >> typ_obstawiania;
+
+        if (saldo <= 0) {
+            cout << "Nie masz wystarczajaco duzo pienidzy, aby grac!" << endl;
+            return;
+        }
+
+        cout << "Podaj kwote do obstawienia: ";
+        cin >> kwota_obstawiana;
+
+        if (kwota_obstawiana > saldo) {
+            cout << "Nie masz wystarczajacej ilosci pieniedzy!" << endl;
+            continue;
+        }
+
+        saldo -= kwota_obstawiana;
+
+
+        switch (typ_obstawiania) {
+        case 1:
+
+            cout << "Wybierz kolor (Czerwony, Czarny, Zielony): ";
+            cin >> kolor_gracza;
+
+            wynik = rand() % 37;
+            if (wynik == 0) {
+                kolor_wyniku = "Zielony";
+            }
+            else if (wynik % 2 == 0) {
+                kolor_wyniku = "Czarny";
+            }
+            else {
+                kolor_wyniku = "Czerwony";
+            }
+
+            cout << "Wynik: " << wynik << " (" << kolor_wyniku << ")" << endl;
+
+            if (kolor_gracza == kolor_wyniku) {
+                cout << "Gratulacje! Wygrales!" << endl;
+                if (kolor_gracza == "Zielony") {
+                    saldo += kwota_obstawiana * 14;
+                }
+                else {
+                    saldo += kwota_obstawiana * 2;
+                }
+            }
+            else {
+                cout << "Niestety, przegrales!" << endl;
+            }
+            break;
+
+        case 2:
+            cout << "Podaj liczbe do obstawienia (0 - 36): ";
+            cin >> liczba_gracza;
+
+            wynik = rand() % 37;
+            cout << "Wynik: " << wynik << endl;
+
+            if (liczba_gracza == wynik) {
+                cout << "Gratulacje! Wygrales!" << endl;
+                saldo += kwota_obstawiana * 35;
+            }
+            else {
+                cout << "Niestety, przegrales!" << endl;
+            }
+            break;
+
+        default:
+            cout << "Niepraiwdlowa opcja!" << endl;
+            break;
+        }
+
+
+        cout << "Czy chcesz kontynuowac gre? (1 - Tak, 0 - Nie): ";
+        int odpowiedz;
+        cin >> odpowiedz;
+
+        if (odpowiedz == 0) {
+            kontynuuj = false;
+            cout << "Dziekujemy za gre! Twoje saldo wynosi: " << saldo << endl;
+        }
+    }
+}
+
+int main() {
+    srand(time(0));  
+
+
+    graj_w_ruletke();
+
+    return 0;
+}
